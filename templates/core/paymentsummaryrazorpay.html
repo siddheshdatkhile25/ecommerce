@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+{% load static %}
+{% load cart_template_tag %}
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>Agroshield - Payment Summary</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="{% static 'img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    <header id="header" class="fixed-top d-flex align-items-center">
+        <div class="container">
+          <div class="header-container d-flex align-items-center justify-content-between">
+            <div class="logo">
+              <div><img src="{% static 'img/logo.png'%}" class="img-fluid" alt=""></div>
+              <h1 class="text-light"><a href="index.html"><span>Agroshield</span></a></h1>
+              <!-- Uncomment below if you prefer to use an image logo -->
+              <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+            </div>
+    
+            <nav id="navbar" class="navbar">
+              <ul>
+                <li><a class="nav-link scrollto active" href="{%url 'index' %}">Home</a></li>
+                
+                
+                <li><a class="nav-link scrollto" href="#about">About</a></li>
+                <li><a class="nav-link scrollto active" href="{% url 'shop' %}">Shop</a></li>
+                <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
+                {% if user.is_authenticated %}
+                <li><a class="nav-link scrollto active" href="{% url 'orderlist' %}">cart&nbsp;&nbsp;
+                  <div style="color:red;">{{request.user | cart_item_count }}</div>
+                </a></li>
+    
+    
+    
+                {% if user.is_superuser %}
+                <li><a class="nav-link scrollto active" href="{% url 'add_product' %}">Add Product</a></li>
+                {% endif %}
+    
+    
+                <li><a class="nav-link scrollto active" href="#hero">Welcome {{user.username}}</a></li>
+                <li><a class="getstarted scrollto" href="{% url 'user_logout' %}">LOGOUT</a></li>
+                {% else %}
+    
+    
+                <li><a class="getstarted scrollto" href="{% url 'user_login' %}">LOGIN</a></li>
+                <li><a class="getstarted scrollto" href="{% url 'user_register' %}">Get Register</a></li>
+                {% endif %}
+              </ul>
+              <i class="bi bi-list mobile-nav-toggle"></i>
+            </nav><!-- .navbar -->
+    
+          </div><!-- End Header Container -->
+        </div>
+      </header><!-- End Header -->
+    <section id="breadcrumbs" class="breadcrumbs">
+        <div class="container">
+
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>Portfolio Details</h2>
+                <ol>
+                    <li><a href="{% url 'index' %}">Home</a></li>
+                    <li>Portfolio Details</li>
+                </ol>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="payment-summary" class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card mt-5">
+                    <div class="card-body">
+                        <h2 class="text-center mb-4">Payment Summary</h2>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><strong>Total Amount:</strong> {{ final_price }}</li>
+                        </ul>
+                        <button id="payButton" class="btn btn-primary btn-block mt-4">Pay Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Payment Form Section (Initially Hidden) -->
+    <section id="payment-form" class="container mt-5" style="display: none;">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="text-center mb-4">Payment Form</h2>
+                        <form id="paymentForm">
+                            <div class="form-group">
+                                <label for="cardNumber">Card Number</label>
+                                <input type="text" class="form-control" id="cardNumber" required>
+                                <label for="cardNumber">CVV</label>
+                                <input type="text" class="form-control" id="cardNumber" required>
+                                <label for="cardNumber">Expiry Date: MM/YY</label>
+                                <input type="text" class="form-control" id="cardNumber" placeholder="MM/YY" required>
+                                <label for="cardNumber">Name on card</label>
+                                <input type="text" class="form-control" id="cardNumber" required>
+                            </div>
+                            <!-- Add other payment form fields here -->
+
+                            <button type="submit" class="btn btn-primary btn-block mt-4">Submit Payment</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Message Section (Initially Hidden) -->
+    <section id="success-message" class="container mt-5" style="display: none;">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="text-center mb-4">Payment Successful!</h2>
+                        <p class="text-center">Thank you for your payment.</p>
+                        <!-- Invoice Button -->
+                        <button id="invoiceButton" class="btn btn-primary btn-block mt-4">View Invoice</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vendor JS Files -->
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+    <!-- Template Main JS File -->
+    <script src="{% static 'js/main.js' %}"></script>
+
+
+    <!-- Custom Script -->
+<script>
+    // Show payment form when Pay Now button is clicked
+    document.getElementById('payButton').addEventListener('click', function () {
+        document.getElementById('payment-form').style.display = 'block';
+    });
+
+    // Handle form submission
+    document.getElementById('paymentForm').addEventListener('submit', function (e) {
+        e.preventDefault(); // Prevent the default form submission
+
+        // Simulate payment processing (you can replace this with actual payment processing logic)
+        setTimeout(function () {
+            // Hide payment form
+            document.getElementById('payment-form').style.display = 'none';
+            // Show success message
+            document.getElementById('success-message').style.display = 'block';
+        }, 2000); // Simulate 2 seconds delay for processing
+    });
+
+    // Handle click event of invoice button
+    document.getElementById('invoiceButton').addEventListener('click', function () {
+        // Redirect to the invoice page
+        window.location.href = "{% url 'invoice' %}";
+    });
+</script>
+
+</body>
+
+</html>
+
